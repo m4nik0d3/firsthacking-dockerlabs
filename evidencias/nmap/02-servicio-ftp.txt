@@ -1,0 +1,10 @@
+# Nmap 7.95 scan initiated Fri Oct 16 18:57:46 2026 as: nmap -sV -p 21 -n -Pn -oN evidencias/nmap/02-servicio-ftp.txt 172.18.0.2
+Nmap scan report for 172.18.0.2
+Host is up (0.00013s latency).
+
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 2.3.4
+Service Info: OS: Unix
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Fri Oct 16 18:57:47 2026 -- 1 IP address (1 host up) scanned in 0.20 seconds

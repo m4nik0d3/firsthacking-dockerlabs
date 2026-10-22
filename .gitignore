@@ -1,0 +1,12 @@
+*Zone.Identifier*
+*.env
+*.pem
+*.key
+*.pcap
+*.zip
+*.tar
+*.vmdk
+*.ova
+Thumbs.db
+desktop.ini
+.vscode/
