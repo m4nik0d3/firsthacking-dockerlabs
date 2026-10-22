@@ -3,7 +3,7 @@
 ## 1. Identificación y objetivo
 
 - **Autor:** Pablo Sánchez
-- **Asignatura y destinatario:** Hacking Ético - Liceo La Paz. Destinatario: Ángel Ramos Seijo
+- **Asignatura:** Hacking Ético
 - **Máquina y plataforma:** FirstHacking (DockerLabs), dificultad Muy Fácil. Autor original: comunidad DockerLabs
 - **URL de procedencia:** https://dockerlabs.es (máquina FirstHacking, filtrada por dificultad "Muy Fácil")
 - **Fecha y zona horaria:** 16/10/2026, de 18:56 a 19:29 aprox. (CEST)
